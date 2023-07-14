@@ -27,7 +27,7 @@ jobs:
         run: bal edi libgen -O rukshanpremathunga -n finance -s schemas -o target
         working-directory: finance
       - name: install 2201.6.0
-        run: bal dist pull 2201.6.0
+        run: sudo bal dist pull 2201.6.0
         working-directory: finance
       - name: pack
         run: |
