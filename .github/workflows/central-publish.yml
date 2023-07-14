@@ -11,6 +11,14 @@ on:
           - CENTRAL
           - DEV CENTRAL
           - STAGE CENTRAL
+      release_version:
+        type: string
+        description: Enter the release version
+        required: true
+      org:
+        type: string
+        description: Enter the organization name
+        required: true
 
 jobs:
   publish-release:
@@ -24,18 +32,31 @@ jobs:
       - name: Pull EDI Tool
         run: bal tool pull edi
       - name: Generate Ballerina Source code
-        run: bal edi libgen -O rukshanpremathunga -n finance -s schemas -o target
-        working-directory: finance
+        run: |
+          string_list=("finance" "logistics" "manufacturing" "retail" "services" "shipping" "supplychain")
+          for item in "${string_list[@]}"; do
+              echo "$item"
+              bal edi libgen -O ${{ inputs.org }} -n $item -s "$item/schemas" -o "$item/target"
+          done
       - name: install 2201.6.0
         run: sudo bal dist pull 2201.6.0
         working-directory: finance
       - name: pack
         run: |
-          bal pack
-        working-directory: finance/target/finance
+          string_list=("finance" "logistics" "manufacturing" "retail" "services" "shipping" "supplychain")
+          current_path="$PWD"
+          for item in "${string_list[@]}"; do
+              cd "$current_path/$item/target/$item"
+              bal pack
+          done
+        working-directory:
       - name: push
         env:
           BALLERINA_CENTRAL_ACCESS_TOKEN: ${{ secrets.BALLERINA_CENTRAL_ACCESS_TOKEN }}
         run: |
-          bal push
-        working-directory: finance/target/finance
+          string_list=("finance" "logistics" "manufacturing" "retail" "services" "shipping" "supplychain")
+          current_path="$PWD"
+          for item in "${string_list[@]}"; do
+            cd "$current_path/$item/target/$item"
+            bal push
+          done
