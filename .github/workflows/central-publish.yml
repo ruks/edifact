@@ -24,7 +24,9 @@ jobs:
       - name: Pull EDI Tool
         run: bal tool pull edi
       - name: Generate Ballerina Source code
-        run: bal edi libgen -O rukshanpremathunga -n finance -s schemas -o target
+        run: |
+          bal tool pull edi
+          bal edi libgen -O rukshanpremathunga -n finance -s schemas -o target
         working-directory: finance
       - name: pack
         run: |
