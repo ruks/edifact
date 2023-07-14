@@ -20,11 +20,11 @@ jobs:
       - uses: ballerina-platform/setup-ballerina@v1
         name: Install Ballerina
         with:
-          version: 2201.6.0
+          version: 2201.7.0
+      - name: Pull EDI Tool
+        run: bal tool pull edi
       - name: Generate Ballerina Source code
-        run: |
-          bal tool pull edi
-          bal edi libgen -O rukshanpremathunga -n finance -s schemas -o target
+        run: bal edi libgen -O rukshanpremathunga -n finance -s schemas -o target
         working-directory: finance
       - name: pack
         run: |
