@@ -21,8 +21,6 @@ jobs:
         name: Install Ballerina
         with:
           version: 2201.6.0
-      - name: Pull EDI Tool
-        run: bal tool pull edi
       - name: Generate Ballerina Source code
         run: |
           bal tool pull edi
