@@ -1,0 +1,39 @@
+name: Publish to the Ballerina central
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        description: Select environment
+        required: true
+        options:
+          - CENTRAL
+          - DEV CENTRAL
+          - STAGE CENTRAL
+
+jobs:
+  publish-release:
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'ballerina-platform'
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ballerina-platform/setup-ballerina@v1
+        name: Install Ballerina
+        with:
+          version: 2201.6.0
+      - name: Pull EDI Tool
+        run: bal tool pull edi
+      - name: Generate Ballerina Source code
+        run: bal edi libgen -O rukshanpremathunga -n finance -s schemas -o target
+        working-directory: finance
+      - name: pack
+        run: |
+          bal pack
+        working-directory: finance/target/finance
+      - name: push
+        env:
+          BALLERINA_CENTRAL_ACCESS_TOKEN: ${{ secrets.BALLERINA_CENTRAL_ACCESS_TOKEN }}
+        run: |
+          bal push
+        working-directory: finance/target/finance
