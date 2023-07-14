@@ -26,6 +26,10 @@ jobs:
       - name: Generate Ballerina Source code
         run: bal edi libgen -O rukshanpremathunga -n finance -s schemas -o target
         working-directory: finance
+      - uses: ballerina-platform/setup-ballerina@v1
+        name: Install Ballerina
+        with:
+          version: 2201.7.0
       - name: pack
         run: |
           bal pack
