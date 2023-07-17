@@ -32,7 +32,7 @@ jobs:
       - name: Generate Ballerina Source code
         run: |
           current_path="$PWD"
-          versions=("d03a")
+          versions=("d03a" "d04a)
           for version in "${versions[@]}"; do
             packages=$(find $version -mindepth 1 -maxdepth 1 -type d -exec basename {} \;)
             for package in $packages; do
