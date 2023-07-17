@@ -49,7 +49,7 @@ jobs:
           packages=$(find target -mindepth 1 -maxdepth 1 -type d -exec basename {} \;)
           for package in $packages; do
             echo "Running bal pack on : $package"
-            cd "$current_dir/$package"
+            cd "$current_dir/target/$package"
             sed -i "s/version = \"[^\"]*\"/version = \"${{ inputs.release_version }}\"/" "Ballerina.toml"
             bal pack
           done
