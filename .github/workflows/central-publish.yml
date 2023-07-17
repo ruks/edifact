@@ -42,6 +42,8 @@ jobs:
               bal edi libgen -O ${{ inputs.org }} -n "edifact.$version.$package" -s "$item" -o "$package/target"
               ls $package
               ls $package/target
+              cd $package/target
+              pwd
             done
           done
       - name: install 2201.6.0
