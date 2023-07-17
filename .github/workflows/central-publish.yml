@@ -9,8 +9,6 @@ on:
         required: true
         options:
           - CENTRAL
-          - DEV CENTRAL
-          - STAGE CENTRAL
       release_version:
         type: string
         description: Enter the release version
@@ -54,7 +52,7 @@ jobs:
             cd "$current_path/$version"
             packages=$(ls -d *)
             for package in $packages; do
-              cd "$current_path/$version/$package/target/$package"
+              cd "$current_path/$version/$package/target/edifact.$version.$package"
               echo "Running bal pack on : $package"
               sed -i "s/version = \"[^\"]*\"/version = \"${{ inputs.release_version }}\"/" "Ballerina.toml"          
               bal pack
@@ -71,7 +69,7 @@ jobs:
             cd "$current_path/$version"
             packages=$(ls -d *)
             for package in $packages; do
-              cd "$current_path/$version/$package/target/$package"
+              cd "$current_path/$version/$package/target/edifact.$version.$package"
               echo "Running bal push on : $package"
               #bal push
             done
