@@ -37,9 +37,9 @@ jobs:
             cd "$current_path/$version"
             packages=$(ls -d *)
             for package in $packages; do
-              cd "$current_path/$version/$package"
+              #cd "$current_path/$version/$package"
               echo "Running libgen on : $package"
-              bal edi libgen -O ${{ inputs.org }} -n "edifact.$version.$package" -s "schema" -o "$package/target"
+              bal edi libgen -O ${{ inputs.org }} -n "edifact.$version.$package" -s "$package" -o "$package/target"
               tree $package/target 
             done
           done
