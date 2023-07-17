@@ -34,7 +34,6 @@ jobs:
           current_path="$PWD"
           versions=("d03a")
           for version in "${versions[@]}"; do
-            #cd "$current_path/$version"
             packages=$(find $version -mindepth 1 -maxdepth 1 -type d -exec basename {} \;)
             for package in $packages; do
               echo "Generating package : edifact.$version.$package"
@@ -46,22 +45,15 @@ jobs:
         run: sudo bal dist pull 2201.6.0
       - name: pack
         run: |
-          current_path="$PWD"
-          versions=("d03a")
-          for version in "${versions[@]}"; do
-            cd "$current_path/$version"
-            packages=$(ls -d *)
-            for package in $packages; do
-              ls
-              pwd
-              cd "$current_path/$version/$package/target/edifact.$version.$package"
-              echo "Running bal pack on : $package"
-              ls
-              pwd
-              sed -i "s/version = \"[^\"]*\"/version = \"${{ inputs.release_version }}\"/" "Ballerina.toml"
-              bal pack
-            done
+          current_dir="$PWD"
+          packages=$(find target -mindepth 1 -maxdepth 1 -type d -exec basename {} \;)
+          for package in $packages; do
+            echo "Running bal pack on : $package"
+            cd "$current_dir/package"
+            sed -i "s/version = \"[^\"]*\"/version = \"${{ inputs.release_version }}\"/" "Ballerina.toml"
+            bal pack
           done
+          
         working-directory:
       - name: push
         env:
