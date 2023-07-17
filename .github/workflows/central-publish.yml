@@ -42,7 +42,7 @@ jobs:
               bal edi libgen -O ${{ inputs.org }} -n "edifact.$version.$package" -s "$package" -o "$package/target"
               ls $package
               ls $package/target
-              cd $package/target
+              cd "$package/target/edifact.$version.$package"
               pwd
             done
           done
