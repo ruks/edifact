@@ -39,7 +39,8 @@ jobs:
             for package in $packages; do
               cd "$current_path/$version/$package"
               echo "Running libgen on : $package"
-              bal edi libgen -O ${{ inputs.org }} -n "edifact.$version.$package" -s "$package" -o target
+              bal edi libgen -O ${{ inputs.org }} -n "edifact.$version.$package" -s "schema" -o "$package/target"
+              tree $package/target 
             done
           done
       - name: install 2201.6.0
