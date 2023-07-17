@@ -40,10 +40,6 @@ jobs:
               cd "$current_path/$version/$package"
               echo "Running libgen on : $package"
               bal edi libgen -O ${{ inputs.org }} -n "edifact.$version.$package" -s "$package" -o target
-              ls $package
-              ls $package/target
-              cd "$package/target/edifact.$version.$package"
-              pwd
             done
           done
       - name: install 2201.6.0
