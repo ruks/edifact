@@ -54,7 +54,9 @@ jobs:
             for package in $packages; do
               cd "$current_path/$version/$package/target/edifact.$version.$package"
               echo "Running bal pack on : $package"
-              sed -i "s/version = \"[^\"]*\"/version = \"${{ inputs.release_version }}\"/" "Ballerina.toml"          
+              sed -i "s/version = \"[^\"]*\"/version = \"${{ inputs.release_version }}\"/" "Ballerina.toml"
+              ls
+              pwd
               bal pack
             done
           done
