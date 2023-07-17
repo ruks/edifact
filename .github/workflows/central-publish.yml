@@ -33,31 +33,46 @@ jobs:
         run: bal tool pull edi
       - name: Generate Ballerina Source code
         run: |
-          string_list=("finance" "logistics" "manufacturing" "retail" "services" "shipping" "supplychain")
-          for item in "${string_list[@]}"; do
-              echo "$item"
-              bal edi libgen -O ${{ inputs.org }} -n $item -s "$item/schemas" -o "$item/target"
+          current_path="$PWD"
+          versions=("d03a")
+          for version in "${versions[@]}"; do
+            cd "$current_path/$version"
+            packages=$(ls -d *)
+            for package in $packages; do
+              cd "$current_path/$version/$package"
+              echo "Running libgen on : $package"
+              bal edi libgen -O ${{ inputs.org }} -n "edifact.$version.$package" -s "$item" -o "$item/package"
+            done
           done
       - name: install 2201.6.0
         run: sudo bal dist pull 2201.6.0
-        working-directory: finance
       - name: pack
         run: |
-          string_list=("finance" "logistics" "manufacturing" "retail" "services" "shipping" "supplychain")
           current_path="$PWD"
-          for item in "${string_list[@]}"; do
-              sed -i "s/version = \"[^\"]*\"/version = \"${{ inputs.release_version }}\"/" "$current_path/$item/target/$item/Ballerina.toml"
-              cd "$current_path/$item/target/$item"
+          versions=("d03a")
+          for version in "${versions[@]}"; do
+            cd "$current_path/$version"
+            packages=$(ls -d *)
+            for package in $packages; do
+              cd "$current_path/$version/$package/target/$package"
+              echo "Running bal pack on : $package"
+              sed -i "s/version = \"[^\"]*\"/version = \"${{ inputs.release_version }}\"/" "Ballerina.toml"          
               bal pack
+            done
           done
         working-directory:
       - name: push
         env:
           BALLERINA_CENTRAL_ACCESS_TOKEN: ${{ secrets.BALLERINA_CENTRAL_ACCESS_TOKEN }}
         run: |
-          string_list=("finance" "logistics" "manufacturing" "retail" "services" "shipping" "supplychain")
           current_path="$PWD"
-          for item in "${string_list[@]}"; do
-            cd "$current_path/$item/target/$item"
-            bal push
+          versions=("d03a")
+          for version in "${versions[@]}"; do
+            cd "$current_path/$version"
+            packages=$(ls -d *)
+            for package in $packages; do
+              cd "$current_path/$version/$package/target/$package"
+              echo "Running bal push on : $package"
+              #bal push
+            done
           done
